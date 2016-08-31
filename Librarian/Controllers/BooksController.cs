@@ -25,41 +25,31 @@ namespace Librarian.Controllers
             return Json(lBookService.GetBookViewModelEnumerable().ToDataSourceResult(request));
         }
 
-        //public ActionResult AddBookIndex(UserViewModel aUserViewModel)
-        //{
-        //    ModelState.Clear();
-        //    return View("AddUser");
-        //}
-
-        //public ActionResult AddBook(UserViewModel aUserViewModel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        UserService lUserService = new UserService();
-        //        lUserService.AddUser(aUserViewModel);
-        //        return View("Index", lUserService.GetUsersViewModel());
-        //    }
-        //    else
-        //        return View("AddUser");
-        //}
-
-        //public ActionResult EditBookIndex(int aBookId)
-        //{
-        //    BookService lBookService = new BookService();
-        //    BookViewModel lBookViewModel = lBookService.GetBookViewModel(aBookId);
-        //    if (lBookViewModel.BookId > 0)
-        //        return View("EditBook", lBookViewModel);
-        //    else
-        //        return View("AddUser");
-        //}
-
-        public ActionResult AddEditBookIndex(int aBookId)
+        public ActionResult AddBookIndex(BookViewModel aBookViewModel)
         {
-            if (aBookId > 0)
-                return View("EditBook");
+            ModelState.Clear();
+            return View("AddBook");
+        }
+
+        public ActionResult AddBook(BookViewModel aBookViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                BookService lBookService = new BookService();
+                lBookService.AddBook(aBookViewModel);
+                if (Request.IsAjaxRequest())
+                    return Json(new { result = true });
+            }
+            return Json(new { result = false });
+        }
+
+        public ActionResult EditBookIndex(BookViewModel aBookViewModel)
+        {
+            if (aBookViewModel.BookId > 0)
+                return View("EditBook", aBookViewModel);
             else
                 return View("AddBook");
-            
+
         }
 
         public ActionResult EditBook(BookViewModel aBookViewModel)

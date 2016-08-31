@@ -22,9 +22,9 @@
             columns.Bound(c => c.Count);
             columns.Bound(c => c.AddDate);
             columns.Bound(c => c.ModifiedDate);
-            columns.Bound(c => c.BookId).ClientTemplate((@Html.ActionLink("Edit", "AddEditBookIndex", "Books", new { aBookId = "#=BookId#" }, null).ToHtmlString()));
+            columns.Bound(c => c.BookId).ClientTemplate((@Html.ActionLink("Edit", "EditBookIndex", "Books", new { aBookId = "#=BookId#" }, null).ToHtmlString()));
         })
-        .ToolBar(toolbar => toolbar.Custom().Text("Add new").Action("AddEditBookIndex", "Books"))
+        .ToolBar(toolbar => toolbar.Template("<button onclick='AddNewBookWindow()'>Add new book</button> "))
         .Scrollable()
         .Groupable()
         .Sortable()
@@ -42,6 +42,25 @@
 
 @(Html.Kendo().Window()
               .Name("window")
-              .Title("About Alvar Aalto")
-              .LoadContentFrom("AddEditBookIndex", "Books")
+              .Title("Add book")
+              .LoadContentFrom("AddBookIndex", "Books")
+              .Visible(false)
 )
+
+<script type="text/javascript">
+
+    function AddNewBookWindow() {
+        var win = $("#window").data("kendoWindow");
+        win.center().open();
+    }
+
+    function ReloadGrid() {
+        $('#grid').data('kendoGrid').dataSource.read();
+        $('#grid').data('kendoGrid').refresh();
+    }
+
+    function editSucces(result) {
+        alert(result.value);
+    }
+
+</script>

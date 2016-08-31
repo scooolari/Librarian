@@ -10,9 +10,14 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Add book</title>
+    <script type="text/javascript">
+        function editSucces(result) {
+            alert(result.value);
+        }
+    </script>
 </head>
 <body>
-    @using (Html.BeginForm("AddBook", "Books"))
+    @using (Ajax.BeginForm("AddBook", "Books", new AjaxOptions { OnSuccess = "editSucces" }))
     {
         @Html.AntiForgeryToken()
 

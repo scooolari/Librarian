@@ -1,0 +1,48 @@
+﻿@model Models.Users.UsersViewModel
+
+@{
+    ViewBag.Title = "Users list";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Users list</h2>
+
+<table class="table">
+    <tr>
+        <th>User Name</th>
+        <th>Birth Date</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Add Date</th>
+        <th>Modified</th>
+        <th>Books Borrowed</th>
+        <th>Active</th>
+        <th></th>
+    </tr>
+
+@foreach (Models.Users.UserViewModel item in Model.Users)
+{
+    <tr>
+        <td>@string.Concat(item.FirstName, " ", item.LastName)</td>
+        <td>@item.BirthDate</td>
+        <td>@item.Email</td>
+        <td>@item.Phone</td>
+        <td>@item.AddDate</td>
+        <td>@item.Modified</td>
+        <td>@item.BooksBorrowed</td>
+        <td>@item.IsActiveString</td>
+        <td></td>
+        <td>
+            @Html.ActionLink("Edit", "EditUserIndex", new { aUserid = item.UserId  })
+            @if (item.BooksBorrowed.Equals(0))
+            {
+                <label> | </label>
+                @Html.ActionLink("Delete", "DeleteUser", new { aUserid = item.UserId }, new { onclick = "return confirm('Are you sure you wish to delete this user?');" })
+            }
+        </td>
+    </tr>
+}
+
+</table>
+
+@Html.ActionLink("Add New", "AddUserIndex")

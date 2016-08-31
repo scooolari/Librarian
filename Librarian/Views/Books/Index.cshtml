@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Books</h2>
+
+@Styles.Render("~/Content/kedno")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/kendo")
+
+@(Html.Kendo().Grid<Models.Books.BookViewModel>()
+        .Name("grid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.Author);
+            columns.Bound(c => c.Title);
+            columns.Bound(c => c.ReleaseDate);
+            columns.Bound(c => c.ISBN);
+            columns.Bound(c => c.BookGenre);
+            columns.Bound(c => c.Count);
+            columns.Bound(c => c.AddDate);
+            columns.Bound(c => c.ModifiedDate);
+            columns.Bound(c => c.BookId).ClientTemplate((@Html.ActionLink("Edit", "AddEditBookIndex", "Books", new { aBookId = "#=BookId#" }, null).ToHtmlString()));
+        })
+        .ToolBar(toolbar => toolbar.Custom().Text("Add new").Action("AddEditBookIndex", "Books"))
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("GetBooksList", "Books"))
+            .PageSize(20)
+            .Model(model => model.Id(a => a.BookId))
+        )
+)
+
+@(Html.Kendo().Window()
+              .Name("window")
+              .Title("About Alvar Aalto")
+              .LoadContentFrom("AddEditBookIndex", "Books")
+)

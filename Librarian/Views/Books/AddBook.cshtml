@@ -1,6 +1,6 @@
 ﻿@model Models.Books.BookViewModel
 
-@using (Ajax.BeginForm("AddBook", "Books", new AjaxOptions { UpdateTargetId = "nothing" }))
+@using (Ajax.BeginForm("AddBook", "Books", new AjaxOptions { UpdateTargetId = "AddBookWindow" }))
 {
     @Html.AntiForgeryToken()
 

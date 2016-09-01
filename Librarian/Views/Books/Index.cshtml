@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Books list";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,6 +8,7 @@
 
 @Styles.Render("~/Content/kedno")
 @Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
 @Scripts.Render("~/bundles/kendo")
 
 @(Html.Kendo().Grid<Models.Books.BookViewModel>()
@@ -16,13 +17,13 @@
         {
             columns.Bound(c => c.Author);
             columns.Bound(c => c.Title);
-            columns.Bound(c => c.ReleaseDate);
+            columns.Bound(c => c.ReleaseDate).Format("{0: dd.MM.yyyy}");
             columns.Bound(c => c.ISBN);
             columns.Bound(c => c.BookGenre);
             columns.Bound(c => c.Count);
-            columns.Bound(c => c.AddDate);
-            columns.Bound(c => c.ModifiedDate);
-            columns.Bound(c => c.BookId).ClientTemplate((@Html.ActionLink("Edit", "EditBookIndex", "Books", new { aBookId = "#=BookId#" }, null).ToHtmlString()));
+            columns.Bound(c => c.AddDate).Format("{0: dd.MM.yyyy}");
+            columns.Bound(c => c.ModifiedDate).Format("{0: dd.MM.yyyy}");
+            columns.Command(com => com.Custom("Edit").Click("EditBookWindow"));​
         })
         .ToolBar(toolbar => toolbar.Template("<button onclick='AddNewBookWindow()'>Add new book</button> "))
         .Scrollable()
@@ -41,16 +42,28 @@
 )
 
 @(Html.Kendo().Window()
-              .Name("window")
+              .Name("AddBookWindow")
               .Title("Add book")
-              .LoadContentFrom("AddBookIndex", "Books")
+              .LoadContentFrom("AddBook", "Books")
               .Visible(false)
+              .Modal(true)
+              .Iframe(false)
+              .Actions(a => { })
+)
+
+@(Html.Kendo().Window()
+              .Name("EditBookWindow")
+              .Title("Edit book")
+              .Visible(false)
+              .Modal(true)
+              .Iframe(false)
+              .Actions(a => { })
 )
 
 <script type="text/javascript">
 
     function AddNewBookWindow() {
-        var win = $("#window").data("kendoWindow");
+        var win = $("#AddBookWindow").data("kendoWindow");
         win.center().open();
     }
 
@@ -59,8 +72,16 @@
         $('#grid').data('kendoGrid').refresh();
     }
 
-    function editSucces(result) {
-        alert(result.value);
+    function EditBookWindow(e) {
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var aBookId = dataItem.BookId;
+        var win = $("#EditBookWindow");
+        var winData = $("#EditBookWindow").data("kendoWindow");
+        win.kendoWindow({
+            content: "/Books/EditBook?aBookId=" + aBookId
+        });
+        winData.center().open();
     }
 
 </script>

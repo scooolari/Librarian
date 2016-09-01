@@ -25,33 +25,36 @@ namespace Librarian.Controllers
             return Json(lBookService.GetBookViewModelEnumerable().ToDataSourceResult(request));
         }
 
-        public ActionResult AddBookIndex(BookViewModel aBookViewModel)
+        [HttpGet]
+        public ActionResult AddBook()
         {
             ModelState.Clear();
-            return View("AddBook");
+            BookService lBookService = new BookService();
+            BookViewModel lBookViewModel = new BookViewModel();
+            lBookViewModel.DictBookGenreList = lBookService.GetDictBookGenreList();
+            return PartialView("AddBook", lBookViewModel);
         }
 
+        [HttpPost]
         public ActionResult AddBook(BookViewModel aBookViewModel)
         {
             if (ModelState.IsValid)
             {
                 BookService lBookService = new BookService();
                 lBookService.AddBook(aBookViewModel);
-                if (Request.IsAjaxRequest())
-                    return Json(new { result = true });
             }
-            return Json(new { result = false });
+            return PartialView("AddBook", aBookViewModel);
         }
 
-        public ActionResult EditBookIndex(BookViewModel aBookViewModel)
+        [HttpGet]
+        public ActionResult EditBook(int aBookId)
         {
-            if (aBookViewModel.BookId > 0)
-                return View("EditBook", aBookViewModel);
-            else
-                return View("AddBook");
-
+            BookService lBookService = new BookService();
+            BookViewModel lBookViewModel = lBookService.GetBookViewModel(aBookId);
+            return PartialView("EditBook", lBookViewModel);
         }
 
+        [HttpPost]
         public ActionResult EditBook(BookViewModel aBookViewModel)
         {
             BookService lBookService = new BookService();

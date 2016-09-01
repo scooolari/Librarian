@@ -41,6 +41,7 @@ namespace BLL.BookService
             Book lBook = Context.GetContext().Book.FirstOrDefault(a => a.BookId == aBookId);
             if (lBook != null)
                 Copy.CopyPropertyValues(lBook, lBookViewModel);
+            lBookViewModel.DictBookGenreList = GetDictBookGenreList();
             return lBookViewModel;
         }
 
@@ -83,6 +84,16 @@ namespace BLL.BookService
                 }
             }
             return null;
+        }
+
+        public List<DictBookGenreViewModel> GetDictBookGenreList()
+        {
+            Context.GetContext();
+            return Context.sLibrarianEntities.DictBookGenre.Select(item => new DictBookGenreViewModel
+                {
+                    BookGenreId = item.BookGenreId,
+                    Name = item.Name
+                }).ToList();
         }
     }
 }

@@ -27,5 +27,7 @@ namespace Models.Books
         public int Count { get; set; }
         public DateTime AddDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public List<DictBookGenreViewModel> DictBookGenreList { get; set; }
+
     }
 }

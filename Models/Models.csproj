@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Books\BooksViewModel.cs" />
     <Compile Include="Books\BookViewModel.cs" />
+    <Compile Include="Books\DictBookGenreViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Users\UsersViewModel.cs" />
     <Compile Include="Users\UserViewModel.cs" />

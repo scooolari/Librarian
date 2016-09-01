@@ -17,7 +17,12 @@ namespace Librarian
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*",
-                        "~/Scripts/jquery.unobtrusive-ajax.min"));
+                        "~/Scripts/jquery.unobtrusive-ajax.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/ajax").Include(
+                        "~/Scripts/MicrosoftAjax.js",
+                        "~/Scripts/MicrosoftMvcAjax.js",
+                        "~/Scripts/MicrosoftMvcValidation.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.

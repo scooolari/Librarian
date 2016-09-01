@@ -38,11 +38,14 @@ namespace Librarian.Controllers
         [HttpPost]
         public ActionResult AddBook(BookViewModel aBookViewModel)
         {
+            BookService lBookService = new BookService();
             if (ModelState.IsValid)
             {
-                BookService lBookService = new BookService();
                 lBookService.AddBook(aBookViewModel);
+                return Json(new { IsValid = true, Mode = "Add" });
             }
+            else
+                aBookViewModel.DictBookGenreList = lBookService.GetDictBookGenreList();
             return PartialView("AddBook", aBookViewModel);
         }
 
@@ -58,10 +61,14 @@ namespace Librarian.Controllers
         public ActionResult EditBook(BookViewModel aBookViewModel)
         {
             BookService lBookService = new BookService();
-            if (aBookViewModel.BookId > 0)
-                return Json(lBookService.EditBook(aBookViewModel));
+            if (ModelState.IsValid)
+            {
+                lBookService.EditBook(aBookViewModel);
+                return Json(new { IsValid = true, Mode = "Edit" });
+            }
             else
-                return Json(lBookService.AddBook(aBookViewModel));
+                aBookViewModel.DictBookGenreList = lBookService.GetDictBookGenreList();
+            return PartialView("EditBook", aBookViewModel);
         }
     }
 }

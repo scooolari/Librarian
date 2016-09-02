@@ -5,12 +5,12 @@
     @Html.DropDownList("UsersList", new SelectList(Model.UsersList, "Key", "Value"))
 </div>
 
-<div id="select-container">
+<div id="divBooksLists">
     @Html.Label("Book 1")
-    @Html.DropDownList("Book1", new SelectList(Model.BooksList, "Key", "Value"))
+    @Html.DropDownList("BooksList1", new SelectList(Model.BooksList, "Key", "Value"), new { id = "BooksList1" })
 </div>
 
-<button id="add" onclick="addSelect('select-container');">Add next</button>
+<button id="add" onclick="addBooksList('divBooksLists');">Add next</button>
 
 @using (Html.BeginForm()) 
 {

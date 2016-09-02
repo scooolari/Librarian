@@ -52,6 +52,8 @@
 
 <script type="text/javascript">
 
+    var booksListNumber = 1;
+
     function OpenAddBorrowWindow() {
         var win = $("#AddBorrowWindow");
         var winData = $("#AddBorrowWindow").data("kendoWindow");
@@ -84,28 +86,20 @@
     //    }
     //}
 
-    function dateGenerate() {
-        var date = new Date();
-        var dateArray = new Array();
-        var i;
-        curYear = date.getFullYear();
-        for (i = 0; i < 5; i++) {
-            dateArray[i] = curYear + i;
-        }
-        return dateArray;
-    }
-
-    function addSelect(divname) {
+    function addBooksList(divname) {
+        booksListNumber = booksListNumber + 1;
+        var previusId = "BooksList" + (booksListNumber - 1);
+        var actualId = "BooksList" + booksListNumber;
         var newDiv = document.createElement('div');
-        var html = "<label><b>Book 2 </b></label><select>";
-        var dates = dateGenerate();
-        var i;
-        for (i = 0; i < dates.length; i++) {
-            html += "<option value='" + dates[i] + "'>" + dates[i] + "</option>";
+        var html = "<label><b>Book " + booksListNumber + " </b></label><select id='" + actualId + "'>";
+        var booksList = document.getElementById(previusId);
+        var booksListOptions = booksList.options;
+        for (var i = 0, len = booksListOptions.length; i < len; i++) {
+            if (i != booksList.selectedIndex)
+                html += "<option value='" + booksListOptions[i].value + "'>" + booksListOptions[i].text + "</option>";
         }
         html += '</select>';
         newDiv.innerHTML = html;
-        alert(newDiv);
         document.getElementById(divname).appendChild(newDiv);
     }
 

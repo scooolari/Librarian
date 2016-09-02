@@ -22,7 +22,8 @@ namespace Librarian.Controllers
         public ActionResult GetBooksList([DataSourceRequest]DataSourceRequest request)
         {
             BookService lBookService = new BookService();
-            return Json(lBookService.GetBookViewModelEnumerable().ToDataSourceResult(request));
+            DataSourceResult bookViewModelDataSourceResults = lBookService.GetBookViewModelEnumerable().ToDataSourceResult(request);
+            return Json(bookViewModelDataSourceResults);
         }
 
         [HttpGet]

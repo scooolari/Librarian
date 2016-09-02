@@ -53,8 +53,8 @@ namespace BLL.UserService
                     IsActive = aUserViewModel.IsActive,
                     AddDate = DateTime.Now
                 };
-            Context.sLibrarianEntities.User.Add(lNewUser);
-            Context.sLibrarianEntities.SaveChanges();
+            Context.LibrarianEntity.User.Add(lNewUser);
+            Context.LibrarianEntity.SaveChanges();
             return lNewUser.UserId;
         }
 
@@ -63,7 +63,7 @@ namespace BLL.UserService
             if (aUserViewModel.UserId > 0)
             {
                 Context.GetContext();
-                User lEditedUser = Context.sLibrarianEntities.User.FirstOrDefault(a => a.UserId == aUserViewModel.UserId);
+                User lEditedUser = Context.LibrarianEntity.User.FirstOrDefault(a => a.UserId == aUserViewModel.UserId);
                 if (lEditedUser != null)
                 {
                     lEditedUser.FirstName = aUserViewModel.FirstName;
@@ -73,7 +73,7 @@ namespace BLL.UserService
                     lEditedUser.Phone = aUserViewModel.Phone;
                     lEditedUser.IsActive = aUserViewModel.IsActive;
                     lEditedUser.ModifiedDate = DateTime.Now;
-                    Context.sLibrarianEntities.SaveChanges();
+                    Context.LibrarianEntity.SaveChanges();
                 }
             }
         }
@@ -81,9 +81,9 @@ namespace BLL.UserService
         public void DeleteUser(int aUserId)
         {
             Context.GetContext();
-            User lDeletedUser = Context.sLibrarianEntities.User.FirstOrDefault(a => a.UserId == aUserId);
-            Context.sLibrarianEntities.User.Remove(lDeletedUser);
-            Context.sLibrarianEntities.SaveChanges();
+            User lDeletedUser = Context.LibrarianEntity.User.FirstOrDefault(a => a.UserId == aUserId);
+            Context.LibrarianEntity.User.Remove(lDeletedUser);
+            Context.LibrarianEntity.SaveChanges();
         }
     }
 }

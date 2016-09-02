@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "Borrows list";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Borrows</h2>
+
+@Styles.Render("~/Content/kedno")
+@Scripts.Render("~/bundles/ajax")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/kendo")
+
+@(Html.Kendo().Grid<Models.Borrows.BorrowViewModel>()
+        .Name("borrowsGrid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.UserId).Hidden();
+            columns.Bound(c => c.UserName);
+            columns.Bound(c => c.BookId).Hidden();
+            columns.Bound(c => c.BookTitle);
+            columns.Bound(c => c.FromDate).Format("{0: dd.MM.yyyy}");
+            columns.Bound(c => c.ToDate).Format("{0: dd.MM.yyyy}");
+            columns.Bound(c => c.IsReturnedString).Title("Returned");
+        })
+        .ToolBar(toolbar => toolbar.Template("<button onclick='OpenAddBorrowWindow()'>Add borrow</button> "))
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("GetBorrowsList", "Borrows"))
+            .PageSize(20)
+            .Model(model => model.Id(a => a.BorrowId))
+        )
+)
+
+@(Html.Kendo().Window()
+              .Name("AddBorrowWindow")
+              .Title("Add borrow")
+              .Visible(false)
+              .Modal(false)
+              .Actions(a => { })
+              .Draggable()
+              .Width(600)
+              .Height(800)
+)
+
+<script type="text/javascript">
+
+    function OpenAddBorrowWindow() {
+        var win = $("#AddBorrowWindow");
+        var winData = $("#AddBorrowWindow").data("kendoWindow");
+        win.kendoWindow({
+            content: "/Borrows/AddBorrow"
+        });
+        winData.center().open();
+    }
+
+    //function EditBookWindow(e) {
+    //    e.preventDefault();
+    //    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+    //    var aBookId = dataItem.BookId;
+    //    var win = $("#EditBookWindow");
+    //    var winData = $("#EditBookWindow").data("kendoWindow");
+    //    win.kendoWindow({
+    //        content: "/Books/EditBook?aBookId=" + aBookId
+    //    });
+    //    winData.center().open();
+    //}
+
+    //function ReloadGrid(e) {
+    //    if (e.IsValid) {
+    //        $('#grid').data('kendoGrid').dataSource.read();
+    //        $('#grid').data('kendoGrid').refresh();
+    //        if (e.Mode == 'Add')
+    //            $("#AddBookWindow").data("kendoWindow").close();
+    //        else if (e.Mode == 'Edit')
+    //            $("#EditBookWindow").data("kendoWindow").close();
+    //    }
+    //}
+
+    function dateGenerate() {
+        var date = new Date();
+        var dateArray = new Array();
+        var i;
+        curYear = date.getFullYear();
+        for (i = 0; i < 5; i++) {
+            dateArray[i] = curYear + i;
+        }
+        return dateArray;
+    }
+
+    function addSelect(divname) {
+        var newDiv = document.createElement('div');
+        var html = "<label><b>Book 2 </b></label><select>";
+        var dates = dateGenerate();
+        var i;
+        for (i = 0; i < dates.length; i++) {
+            html += "<option value='" + dates[i] + "'>" + dates[i] + "</option>";
+        }
+        html += '</select>';
+        newDiv.innerHTML = html;
+        alert(newDiv);
+        document.getElementById(divname).appendChild(newDiv);
+    }
+
+</script>

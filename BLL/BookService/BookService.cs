@@ -13,14 +13,14 @@ namespace BLL.BookService
     {
         public BooksViewModel GetBooksViewModel()
         {
-            BooksViewModel lBooksViewModel = new BooksViewModel();
-            lBooksViewModel.Books = GetBookViewModelEnumerable().ToList();
-            return lBooksViewModel;
+            BooksViewModel booksViewModel = new BooksViewModel();
+            booksViewModel.Books = GetBookViewModelEnumerable().ToList();
+            return booksViewModel;
         }
 
         public IEnumerable<BookViewModel> GetBookViewModelEnumerable()
         {
-            return Context.GetContext().Book.Select(item => new BookViewModel
+            IEnumerable<BookViewModel> bookViewModelEnumerable = Context.GetContext().Book.Select(item => new BookViewModel
             {
                 BookId = item.BookId,
                 Author = item.Author,
@@ -33,54 +33,60 @@ namespace BLL.BookService
                 AddDate = item.AddDate,
                 ModifiedDate = item.ModifiedDate
             });
+            return bookViewModelEnumerable;
         }
 
-        public BookViewModel GetBookViewModel(int aBookId)
+        public BookViewModel GetBookViewModel(int bookId)
         {
-            BookViewModel lBookViewModel = new BookViewModel();
-            Book lBook = Context.GetContext().Book.FirstOrDefault(a => a.BookId == aBookId);
-            if (lBook != null)
-                Copy.CopyPropertyValues(lBook, lBookViewModel);
-            lBookViewModel.DictBookGenreList = GetDictBookGenreList();
-            return lBookViewModel;
+            BookViewModel bookViewModel = new BookViewModel();
+            Book bookEntity = Context.GetContext().Book.FirstOrDefault(a => a.BookId == bookId);
+            
+            if (bookEntity != null)
+                Copy.CopyPropertyValues(bookEntity, bookViewModel);
+            
+            bookViewModel.DictBookGenreList = GetDictBookGenreList();
+            
+            return bookViewModel;
         }
 
-        public BookViewModel AddBook(BookViewModel aBookViewModel)
+        public BookViewModel AddBook(BookViewModel bookViewModel)
         {
             Context.GetContext();
-            Book lNewBook = new Book()
+            Book newBook = new Book()
             {
-                Author = aBookViewModel.Author,
-                Title = aBookViewModel.Title,
-                ReleaseDate = aBookViewModel.ReleaseDate,
-                ISBN = aBookViewModel.ISBN,
-                BookGenreId = aBookViewModel.BookGenreId,
-                Count = aBookViewModel.Count,
+                Author = bookViewModel.Author,
+                Title = bookViewModel.Title,
+                ReleaseDate = bookViewModel.ReleaseDate,
+                ISBN = bookViewModel.ISBN,
+                BookGenreId = bookViewModel.BookGenreId,
+                Count = bookViewModel.Count,
                 AddDate = DateTime.Now
             };
-            Context.sLibrarianEntities.Book.Add(lNewBook);
-            Context.sLibrarianEntities.SaveChanges();
-            aBookViewModel.BookId = lNewBook.BookId;
-            return aBookViewModel;
+            Context.LibrarianEntity.Book.Add(newBook);
+            Context.LibrarianEntity.SaveChanges();
+            bookViewModel.BookId = newBook.BookId;
+            return bookViewModel;
         }
 
-        public BookViewModel EditBook(BookViewModel aBookViewModel)
+        public BookViewModel EditBook(BookViewModel bookViewModel)
         {
-            if (aBookViewModel.BookId > 0)
+            if (bookViewModel.BookId > 0)
             {
                 Context.GetContext();
-                Book lEditedBook = Context.sLibrarianEntities.Book.FirstOrDefault(a => a.BookId == aBookViewModel.BookId);
-                if (lEditedBook != null)
+                Book editedBook = Context.LibrarianEntity.Book.FirstOrDefault(a => a.BookId == bookViewModel.BookId);
+                if (editedBook != null)
                 {
-                    lEditedBook.Author = aBookViewModel.Author;
-                    lEditedBook.Title = aBookViewModel.Title;
-                    lEditedBook.ReleaseDate = aBookViewModel.ReleaseDate;
-                    lEditedBook.ISBN = aBookViewModel.ISBN;
-                    lEditedBook.BookGenreId = aBookViewModel.BookGenreId;
-                    lEditedBook.Count = aBookViewModel.Count;
-                    lEditedBook.ModifiedDate = DateTime.Now;
-                    Context.sLibrarianEntities.SaveChanges();
-                    return aBookViewModel;
+                    editedBook.Author = bookViewModel.Author;
+                    editedBook.Title = bookViewModel.Title;
+                    editedBook.ReleaseDate = bookViewModel.ReleaseDate;
+                    editedBook.ISBN = bookViewModel.ISBN;
+                    editedBook.BookGenreId = bookViewModel.BookGenreId;
+                    editedBook.Count = bookViewModel.Count;
+                    editedBook.ModifiedDate = DateTime.Now;
+
+                    Context.LibrarianEntity.SaveChanges();
+                    
+                    return bookViewModel;
                 }
             }
             return null;
@@ -89,11 +95,13 @@ namespace BLL.BookService
         public List<DictBookGenreViewModel> GetDictBookGenreList()
         {
             Context.GetContext();
-            return Context.sLibrarianEntities.DictBookGenre.Select(item => new DictBookGenreViewModel
+            List<DictBookGenreViewModel> dictBookGenreViewModelsList =
+                Context.LibrarianEntity.DictBookGenre.Select(item => new DictBookGenreViewModel
                 {
                     BookGenreId = item.BookGenreId,
                     Name = item.Name
                 }).ToList();
+            return dictBookGenreViewModelsList;
         }
     }
 }

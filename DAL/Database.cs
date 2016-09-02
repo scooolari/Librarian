@@ -9,12 +9,12 @@ namespace DAL
 {
     public class Context
     {
-        public static LibrarianEntities sLibrarianEntities;
+        public static LibrarianEntities LibrarianEntity;
 
         public static LibrarianEntities GetContext()
         {
-            sLibrarianEntities = new LibrarianEntities();
-            return sLibrarianEntities;
+            LibrarianEntity = new LibrarianEntities();
+            return LibrarianEntity;
         }
     }
 }

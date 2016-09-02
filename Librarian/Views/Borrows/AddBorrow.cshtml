@@ -1,0 +1,24 @@
+﻿@model Models.Borrows.BorrowAddModel
+
+<div>
+    @Html.Label("User")
+    @Html.DropDownList("UsersList", new SelectList(Model.UsersList, "Key", "Value"))
+</div>
+
+<div id="select-container">
+    @Html.Label("Book 1")
+    @Html.DropDownList("Book1", new SelectList(Model.BooksList, "Key", "Value"))
+</div>
+
+<button id="add" onclick="addSelect('select-container');">Add next</button>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(a => a.SelectedUserId)
+        @Html.HiddenFor(a => a.ChosenBooks)
+
+        <input type="submit" value="Save" />
+        @Html.ActionLink("Cancel", "Index", null, null)
+}

@@ -73,6 +73,22 @@ namespace BLL.BorrowService
             }
         }
 
+        public void ReturnBooks(int[] borrowsIds)
+        {
+            Context.GetContext();
+            if (borrowsIds.Any())
+            {
+                for (int i = 0; i < borrowsIds.Length; i++)
+                {
+                    int borrowId = borrowsIds[i];
+                    Borrow returnedBorrow = Context.LibrarianEntity.Borrow.FirstOrDefault(a => a.BorrowId == borrowId);
+                    if (returnedBorrow != null)
+                        returnedBorrow.IsReturned = true;
+                }
+                Context.LibrarianEntity.SaveChanges();
+            }
+        }
+
         public IEnumerable<UserWithBooksViewModel> GetUsersWithBooksList()
         {
             IEnumerable<UserWithBooksViewModel> usersWithBooksList = Context.GetContext().User
@@ -84,6 +100,22 @@ namespace BLL.BorrowService
                 })
                 .Where(a => a.BooksBorrowed > 0);
             return usersWithBooksList;
+        }
+
+        public IEnumerable<UserBookViewModel> GetUserBooksList(int userId)
+        {
+            IEnumerable<UserBookViewModel> usersBooksList = Context.GetContext().Borrow
+                .Where(a => a.UserId == userId && !a.IsReturned)
+                .Select(item => new UserBookViewModel
+                {
+                    BorrowId = item.BorrowId,
+                    BookId = item.BookId,
+                    Author = item.Book.Author,
+                    Title = item.Book.Title,
+                    FromDate = item.FromDate,
+                    ToDate = item.ToDate
+                });
+            return usersBooksList;
         }
     }
 }

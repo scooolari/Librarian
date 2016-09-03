@@ -56,6 +56,15 @@ namespace Librarian.Controllers
             return View("Index");
         }
 
+        [HttpPost]
+        public ActionResult ReturnBooks(int[] borrowsIds, int userId)
+        {
+            BorrowService borrowService = new BorrowService();
+            borrowService.ReturnBooks(borrowsIds);
+            var redirectUrl = new UrlHelper(Request.RequestContext).Action("UserBooks", "Borrows", userId);
+            return Json(new { Url = string.Concat(redirectUrl, "?userId=", userId) });
+        }
+
         public ActionResult GetUsersWithBooksList([DataSourceRequest]DataSourceRequest request)
         {
             BorrowService borrowService = new BorrowService();
@@ -67,12 +76,17 @@ namespace Librarian.Controllers
         public ActionResult UserBooks(int userId)
         {
             UserService userService = new UserService();
-            UserViewModel user = userService.GetUserViewModel(userId);
-            ViewBag.Header = string.Concat(user.FirstName, " ", user.LastName, " books");
-
-            BorrowService borrowService = new BorrowService();
+            UserViewModel userViewModel = userService.GetUserViewModel(userId);
+            ViewBag.Header = string.Concat(userViewModel.FirstName, " ", userViewModel.LastName, " books");
             
-            return View();
+            return View(userViewModel);
+        }
+
+        public ActionResult GetUserBooksList([DataSourceRequest]DataSourceRequest request, int userId)
+        {
+            BorrowService borrowService = new BorrowService();
+            DataSourceResult userBooksList = borrowService.GetUserBooksList(userId).ToDataSourceResult(request);
+            return Json(userBooksList);
         }
     }
 }

@@ -1,7 +1,75 @@
-﻿@{
+﻿@model Models.Users.UserViewModel
+
+@{
     ViewBag.Title = "UserBooks";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>@ViewBag.Header</h2>
 
+@Html.HiddenFor(a => a.UserId, new { id = "UserId" })
+
+@Styles.Render("~/Content/kedno")
+@Scripts.Render("~/bundles/ajax")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/kendo")
+
+@(Html.Kendo().Grid<Models.Borrows.UserBookViewModel>()
+        .Name("userBooksGrid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.Title);
+            columns.Bound(c => c.Author);
+            columns.Bound(c => c.FromDate).Format("{0: dd.MM.yyyy}");
+            columns.Bound(c => c.ToDate).Format("{0: dd.MM.yyyy}");
+            columns.Bound(c => c.BorrowId)
+                .Title("Return")
+                .ClientTemplate("<input name='check#=BorrowId#' type='checkbox' onchange='CheckedChange(this)' />");
+        })
+        .ToolBar(toolbar => toolbar.Template("<button onclick='ReturnSelectedBooks()'>Return selected books</button> "))
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("GetUserBooksList", "Borrows", new { userId = Model.UserId }))
+            .PageSize(20)
+            .Model(model => model.Id(a => a.BorrowId))
+        )
+)
+
+<script type="text/javascript">
+
+    var selectedBorrowsId = [];
+
+    function CheckedChange(selectedCheckbox) {
+        var borrowId = parseInt(selectedCheckbox.name.replace('check', ''));
+        if (selectedCheckbox.checked)
+            selectedBorrowsId.push(borrowId);
+        else {
+            var index = selectedBorrowsId.indexOf(borrowId);
+            if (index != -1)
+                selectedBorrowsId.splice(index, 1);
+        }
+    }
+
+    function ReturnSelectedBooks() {
+        var userId = document.getElementById('UserId').value;
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ReturnBooks", "Borrows")',
+            datatype: "json",
+            traditional: true,
+            data: { 'borrowsIds': selectedBorrowsId, 'userId': userId },
+            success: function (result) {
+                window.location.href = result.Url;
+            }
+        });
+    }
+
+</script>

@@ -210,6 +210,7 @@
     <Content Include="Views\Books\AddBook.cshtml" />
     <Content Include="Views\Borrows\Index.cshtml" />
     <Content Include="Views\Borrows\AddBorrow.cshtml" />
+    <Content Include="Views\Borrows\UserBooks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

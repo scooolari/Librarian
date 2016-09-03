@@ -15,13 +15,14 @@
         .Name("borrowsGrid")
         .Columns(columns =>
         {
-            columns.Bound(c => c.UserId).Hidden();
             columns.Bound(c => c.UserName);
-            columns.Bound(c => c.BookId).Hidden();
             columns.Bound(c => c.BookTitle);
             columns.Bound(c => c.FromDate).Format("{0: dd.MM.yyyy}");
             columns.Bound(c => c.ToDate).Format("{0: dd.MM.yyyy}");
             columns.Bound(c => c.IsReturnedString).Title("Returned");
+            columns.Bound(c => c.BorrowId)
+                .Title("")
+                .ClientTemplate("<a href='" + Url.Action("ReturnBook", "Borrows", new { borrowId = "#=BorrowId#" }) + "'># if (!IsReturned) { # Return book # } #</a>");
         })
         .ToolBar(toolbar => toolbar.Template("<button onclick='OpenAddBorrowWindow()'>Add borrow</button> "))
         .Scrollable()
@@ -37,6 +38,32 @@
             .PageSize(20)
             .Model(model => model.Id(a => a.BorrowId))
         )
+)
+
+<h2>Users with books</h2>
+
+@(Html.Kendo().Grid<Models.Borrows.UserWithBooksViewModel>()
+        .Name("usersWithBooksGrid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.UserName);
+            columns.Bound(c => c.BooksBorrowed);
+        })
+        .ToolBar(toolbar => toolbar.Template("<button onclick='ViewUserBooks()'>View books borrowed by user</button> "))
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("GetUsersWithBooksList", "Borrows"))
+            .PageSize(20)
+            .Model(model => model.Id(a => a.UserId))
+        )
+        .Selectable(a => a.Type(GridSelectionType.Row))
 )
 
 @(Html.Kendo().Window()
@@ -144,6 +171,14 @@
                 window.location.href = result.Url;
             }
         });
+    }
+
+    function ViewUserBooks() {
+        var grid = $('#usersWithBooksGrid').data("kendoGrid");
+        var selectedRow = grid.select();
+        if (selectedRow.index() >= 0) {
+            window.location.href = '@Url.Action("UserBooks", "Borrows")?userId=' + grid.dataItem(selectedRow).UserId;
+        }
     }
 
 </script>

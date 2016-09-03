@@ -61,5 +61,29 @@ namespace BLL.BorrowService
             }
             Context.LibrarianEntity.SaveChanges();
         }
+
+        public void ReturnBook(int borrowId)
+        {
+            Context.GetContext();
+            Borrow returnedBorrow = Context.LibrarianEntity.Borrow.FirstOrDefault(a => a.BorrowId == borrowId);
+            if (returnedBorrow != null)
+            {
+                returnedBorrow.IsReturned = true;
+                Context.LibrarianEntity.SaveChanges();
+            }
+        }
+
+        public IEnumerable<UserWithBooksViewModel> GetUsersWithBooksList()
+        {
+            IEnumerable<UserWithBooksViewModel> usersWithBooksList = Context.GetContext().User
+                .Select(item => new UserWithBooksViewModel
+                {
+                    UserId = item.UserId,
+                    UserName = string.Concat(item.FirstName, " ", item.LastName),
+                    BooksBorrowed = item.Borrow.Count(a => !a.IsReturned)
+                })
+                .Where(a => a.BooksBorrowed > 0);
+            return usersWithBooksList;
+        }
     }
 }

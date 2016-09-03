@@ -7,6 +7,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Models.Borrows;
+using BLL.UserService;
+using Models.Users;
 
 namespace Librarian.Controllers
 {
@@ -44,7 +46,33 @@ namespace Librarian.Controllers
             borrowService.AddBorrows(borrowAddModel.SelectedUserId, borrowAddModel.ChosenBooks);
             var redirectUrl = new UrlHelper(Request.RequestContext).Action("Index", "Borrows");
             return Json(new { Url = redirectUrl });
-            //return View("Index", "Borrows");
+        }
+
+        [HttpGet]
+        public ActionResult ReturnBook(int borrowId)
+        {
+            BorrowService borrowService = new BorrowService();
+            borrowService.ReturnBook(borrowId);
+            return View("Index");
+        }
+
+        public ActionResult GetUsersWithBooksList([DataSourceRequest]DataSourceRequest request)
+        {
+            BorrowService borrowService = new BorrowService();
+            DataSourceResult usersWithBooksDataSourceResults = borrowService.GetUsersWithBooksList().ToDataSourceResult(request);
+            return Json(usersWithBooksDataSourceResults);
+        }
+
+        [HttpGet]
+        public ActionResult UserBooks(int userId)
+        {
+            UserService userService = new UserService();
+            UserViewModel user = userService.GetUserViewModel(userId);
+            ViewBag.Header = string.Concat(user.FirstName, " ", user.LastName, " books");
+
+            BorrowService borrowService = new BorrowService();
+            
+            return View();
         }
     }
 }

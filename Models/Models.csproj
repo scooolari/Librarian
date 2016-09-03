@@ -45,6 +45,8 @@
     <Compile Include="Books\DictBookGenreViewModel.cs" />
     <Compile Include="Borrows\BorrowAddModel.cs" />
     <Compile Include="Borrows\BorrowViewModel.cs" />
+    <Compile Include="Borrows\UserBookViewModel.cs" />
+    <Compile Include="Borrows\UserWithBooksViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Users\UsersViewModel.cs" />
     <Compile Include="Users\UserViewModel.cs" />

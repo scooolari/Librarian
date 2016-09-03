@@ -2,7 +2,7 @@
 
 <div>
     @Html.Label("User")
-    @Html.DropDownList("UsersList", new SelectList(Model.UsersList, "Key", "Value"))
+    @Html.DropDownList("UsersList", new SelectList(Model.UsersList, "Key", "Value"), new { id = "UsersList" })
 </div>
 
 <div id="divBooksLists">
@@ -11,14 +11,6 @@
 </div>
 
 <button id="add" onclick="addBooksList('divBooksLists');">Add next</button>
-
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-
-        @Html.HiddenFor(a => a.SelectedUserId)
-        @Html.HiddenFor(a => a.ChosenBooks)
-
-        <input type="submit" value="Save" />
-        @Html.ActionLink("Cancel", "Index", null, null)
-}
+<br/>
+<button type="button" onclick="SaveAndSubmit()">OK</button>
+@Html.ActionLink("Cancel", "Index", null, null)

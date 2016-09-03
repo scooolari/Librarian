@@ -43,5 +43,23 @@ namespace BLL.BorrowService
                 .ToDictionary(a => a.UserId, a => string.Concat(a.FirstName, " ", a.LastName)).ToList();
             return usersList;
         }
+
+        public void AddBorrows(int userId, int[] booksIds)
+        {
+            Context.GetContext();
+            DateTime from = DateTime.Now;
+            DateTime to = from.AddMonths(1);
+            for (int i = 0; i < booksIds.Length; i++)
+            {
+                Borrow newBorrow = new Borrow();
+                newBorrow.UserId = userId;
+                newBorrow.BookId = booksIds[i];
+                newBorrow.FromDate = from;
+                newBorrow.ToDate = to;
+                newBorrow.IsReturned = false;
+                Context.LibrarianEntity.Borrow.Add(newBorrow);
+            }
+            Context.LibrarianEntity.SaveChanges();
+        }
     }
 }

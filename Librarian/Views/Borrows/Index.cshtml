@@ -52,7 +52,8 @@
 
 <script type="text/javascript">
 
-    var booksListNumber = 1;
+    var actualListNumber = 1;
+    var previousListNumber = 0;
 
     function OpenAddBorrowWindow() {
         var win = $("#AddBorrowWindow");
@@ -63,44 +64,86 @@
         winData.center().open();
     }
 
-    //function EditBookWindow(e) {
-    //    e.preventDefault();
-    //    var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
-    //    var aBookId = dataItem.BookId;
-    //    var win = $("#EditBookWindow");
-    //    var winData = $("#EditBookWindow").data("kendoWindow");
-    //    win.kendoWindow({
-    //        content: "/Books/EditBook?aBookId=" + aBookId
-    //    });
-    //    winData.center().open();
-    //}
-
-    //function ReloadGrid(e) {
-    //    if (e.IsValid) {
-    //        $('#grid').data('kendoGrid').dataSource.read();
-    //        $('#grid').data('kendoGrid').refresh();
-    //        if (e.Mode == 'Add')
-    //            $("#AddBookWindow").data("kendoWindow").close();
-    //        else if (e.Mode == 'Edit')
-    //            $("#EditBookWindow").data("kendoWindow").close();
-    //    }
-    //}
-
     function addBooksList(divname) {
-        booksListNumber = booksListNumber + 1;
-        var previusId = "BooksList" + (booksListNumber - 1);
-        var actualId = "BooksList" + booksListNumber;
+        previousListNumber = actualListNumber;
+        actualListNumber = actualListNumber + 1;
+        var previusId = "BooksList" + (previousListNumber);
+        var actualId = "BooksList" + actualListNumber;
         var newDiv = document.createElement('div');
-        var html = "<label><b>Book " + booksListNumber + " </b></label><select id='" + actualId + "'>";
-        var booksList = document.getElementById(previusId);
-        var booksListOptions = booksList.options;
+        var html = "<label><b>Book " + actualListNumber + " </b></label><select id='" + actualId + "'>";
+        var previusBooksList = document.getElementById(previusId);
+        var booksListOptions = previusBooksList.options;
         for (var i = 0, len = booksListOptions.length; i < len; i++) {
-            if (i != booksList.selectedIndex)
+            if (i != previusBooksList.selectedIndex)
                 html += "<option value='" + booksListOptions[i].value + "'>" + booksListOptions[i].text + "</option>";
         }
-        html += '</select>';
+        html += "</select>";
+        html += "<button id='buttonBooksList" + actualListNumber + "' onclick=\"removeBooksList('divBooksList" + actualListNumber + "');\">Remove</button>";
         newDiv.innerHTML = html;
+        newDiv.id = 'divBooksList' + actualListNumber;
         document.getElementById(divname).appendChild(newDiv);
+        previusBooksList.disabled = true;
+    }
+
+    function removeBooksList(divId) {
+        var removedListNumber = parseInt(divId.replace('divBooksList', ''));
+        var myDiv = document.getElementById(divId);
+        var removedSelect = myDiv.getElementsByTagName('select')[0];
+        var selectedRemoveItem = removedSelect.options[removedSelect.selectedIndex];
+        // add selected option from removed select to others selects
+        for (var i = removedListNumber + 1, len = actualListNumber; i <= len; i++) {
+            var selectListItems = document.getElementById('BooksList' + i);
+            if (selectListItems) {
+                var option = document.createElement("option");
+                option.text = selectedRemoveItem.text;
+                option.value = selectedRemoveItem.value;
+                selectListItems.options.add(option);
+            }
+        }
+        // update global ListNumbers (if needed)
+        if (removedListNumber == actualListNumber) {
+            var previusId = "BooksList" + (previousListNumber);
+            var previusBooksList = document.getElementById(previusId);
+            previusBooksList.disabled = false;
+            actualListNumber = previousListNumber;
+            previousListNumber = lookForPreviousId(actualListNumber);
+        }
+        else if (removedListNumber == previousListNumber) {
+            previousListNumber = lookForPreviousId(previousListNumber);
+        }
+        myDiv.parentNode.removeChild(myDiv);
+    }
+
+    function lookForPreviousId(startingListNumber) {
+        for (var i = startingListNumber - 1; i >= 0; i++) {
+            var existsBooksList = document.getElementById('BooksList' + i);
+            if (existsBooksList) {
+                return i;
+            }
+        }
+        return 1;
+    }
+
+    function SaveAndSubmit() {
+        var booksIdList = [];
+        for (var i = 1; i <= actualListNumber; i++) {
+            var existsBooksList = document.getElementById('BooksList' + i);
+            if (existsBooksList) {
+                booksIdList.push(existsBooksList.options[existsBooksList.selectedIndex].value);
+            }
+        }
+        var usersIdList = document.getElementById('UsersList');
+        var userId = usersIdList.options[usersIdList.selectedIndex].value;
+        $.ajax({ 
+                type: "POST",
+                url: '@Url.Action("AddBorrow","Borrows")',
+                datatype: "json",
+            traditional: true,
+            data: { 'ChosenBooks': booksIdList, 'SelectedUserId': userId },
+            success: function (result) {
+                window.location.href = result.Url;
+            }
+        });
     }
 
 </script>

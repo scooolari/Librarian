@@ -36,5 +36,15 @@ namespace Librarian.Controllers
             borrowAddModel.BooksList = borrowService.GetAvailableBooksList();
             return PartialView("AddBorrow", borrowAddModel);
         }
-	}
+
+        [HttpPost]
+        public ActionResult AddBorrow(BorrowAddModel borrowAddModel)
+        {
+            BorrowService borrowService = new BorrowService();
+            borrowService.AddBorrows(borrowAddModel.SelectedUserId, borrowAddModel.ChosenBooks);
+            var redirectUrl = new UrlHelper(Request.RequestContext).Action("Index", "Borrows");
+            return Json(new { Url = redirectUrl });
+            //return View("Index", "Borrows");
+        }
+    }
 }

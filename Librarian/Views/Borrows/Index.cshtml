@@ -81,6 +81,7 @@
 
     var actualListNumber = 1;
     var previousListNumber = 0;
+    var lastSelectedOption = null;
 
     function OpenAddBorrowWindow() {
         var win = $("#AddBorrowWindow");
@@ -92,24 +93,72 @@
     }
 
     function addBooksList(divname) {
-        previousListNumber = actualListNumber;
-        actualListNumber = actualListNumber + 1;
-        var previusId = "BooksList" + (previousListNumber);
-        var actualId = "BooksList" + actualListNumber;
-        var newDiv = document.createElement('div');
-        var html = "<label><b>Book " + actualListNumber + " </b></label><select id='" + actualId + "'>";
+        var previusId = "BooksList" + (actualListNumber);
         var previusBooksList = document.getElementById(previusId);
         var booksListOptions = previusBooksList.options;
-        for (var i = 0, len = booksListOptions.length; i < len; i++) {
-            if (i != previusBooksList.selectedIndex)
-                html += "<option value='" + booksListOptions[i].value + "'>" + booksListOptions[i].text + "</option>";
+
+        if (booksListOptions.length > 1) {
+            previousListNumber = actualListNumber;
+            actualListNumber = actualListNumber + 1;
+            var actualId = "BooksList" + actualListNumber;
+            var newDiv = document.createElement('div');
+            var html = "<label><b>Book " + actualListNumber + " </b></label><select id='" + actualId + "' onfocus=\"focusBooksList('" + actualId + "')\" onchange=\"changeBooksList('" + actualId + "')\" >";
+            for (var i = 0, len = booksListOptions.length; i < len; i++) {
+                if (i != previusBooksList.selectedIndex)
+                    html += "<option value='" + booksListOptions[i].value + "'>" + booksListOptions[i].text + "</option>";
+            }
+            html += "</select>";
+            html += "<button id='buttonBooksList" + actualListNumber + "' onclick=\"removeBooksList('divBooksList" + actualListNumber + "');\">Remove</button>";
+            newDiv.innerHTML = html;
+            newDiv.id = 'divBooksList' + actualListNumber;
+            document.getElementById(divname).appendChild(newDiv);
+            var addedSelect = document.getElementById(actualId);
+            removeOptionFromListsBefore(addedSelect.options[addedSelect.selectedIndex]);
         }
-        html += "</select>";
-        html += "<button id='buttonBooksList" + actualListNumber + "' onclick=\"removeBooksList('divBooksList" + actualListNumber + "');\">Remove</button>";
-        newDiv.innerHTML = html;
-        newDiv.id = 'divBooksList' + actualListNumber;
-        document.getElementById(divname).appendChild(newDiv);
-        previusBooksList.disabled = true;
+    }
+
+    function addOptionToAllLists(addedOption, skippedListNumber) {
+        // add selected option to all existing lists
+        for (var i = 1; i <= actualListNumber; i++) {
+            if (i == skippedListNumber)
+                continue;
+            var selectListItems = document.getElementById('BooksList' + i);
+            if (selectListItems) {
+                var option = document.createElement("option");
+                option.text = addedOption.text;
+                option.value = addedOption.value;
+                selectListItems.options.add(option);
+            }
+        }
+    }
+
+    function removeOptionFromListsBefore(removedOption) {
+        // remove selected option from lists before added list
+        for (var i = 1; i < actualListNumber; i++) {
+            $("#BooksList" + i + " option[value='" + removedOption.value + "']").remove();
+        }
+    }
+
+    function removeOptionFromAllLists(removedOption, skippedListNumber) {
+        // remove selected option from all existing lists beside one
+        for (var i = 1; i <= actualListNumber; i++) {
+            if (i == skippedListNumber)
+                continue;
+            $("#BooksList" + i + " option[value='" + removedOption.value + "']").remove();
+        }
+    }
+
+    function focusBooksList(booksListId) {
+        var selectedBooksList = document.getElementById(booksListId);
+        lastSelectedOption = selectedBooksList.options[selectedBooksList.selectedIndex];
+    }
+
+    function changeBooksList(booksListId) {
+        var selectedBooksList = document.getElementById(booksListId);
+        var actualSelectedOption = selectedBooksList.options[selectedBooksList.selectedIndex];
+        var selectedListNumber = parseInt(booksListId.replace('BooksList', ''));
+        addOptionToAllLists(lastSelectedOption, selectedListNumber);
+        removeOptionFromAllLists(actualSelectedOption, selectedListNumber);
     }
 
     function removeBooksList(divId) {
@@ -117,21 +166,11 @@
         var myDiv = document.getElementById(divId);
         var removedSelect = myDiv.getElementsByTagName('select')[0];
         var selectedRemoveItem = removedSelect.options[removedSelect.selectedIndex];
-        // add selected option from removed select to others selects
-        for (var i = removedListNumber + 1, len = actualListNumber; i <= len; i++) {
-            var selectListItems = document.getElementById('BooksList' + i);
-            if (selectListItems) {
-                var option = document.createElement("option");
-                option.text = selectedRemoveItem.text;
-                option.value = selectedRemoveItem.value;
-                selectListItems.options.add(option);
-            }
-        }
+        addOptionToAllLists(selectedRemoveItem);
         // update global ListNumbers (if needed)
         if (removedListNumber == actualListNumber) {
             var previusId = "BooksList" + (previousListNumber);
             var previusBooksList = document.getElementById(previusId);
-            previusBooksList.disabled = false;
             actualListNumber = previousListNumber;
             previousListNumber = lookForPreviousId(actualListNumber);
         }

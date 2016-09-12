@@ -7,7 +7,7 @@
 
 <div id="divBooksLists">
     @Html.Label("Book 1")
-    @Html.DropDownList("BooksList1", new SelectList(Model.BooksList, "Key", "Value"), new { id = "BooksList1" })
+    @Html.DropDownList("BooksList1", new SelectList(Model.BooksList, "Key", "Value"), new { id = "BooksList1", onfocus = "focusBooksList('BooksList1')", onchange = "changeBooksList('BooksList1')" })
 </div>
 
 <button id="add" onclick="addBooksList('divBooksLists');">Add next</button>

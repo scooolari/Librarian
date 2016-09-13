@@ -1,0 +1,51 @@
+﻿@model Models.Reports.ReportViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Reports</h2>
+
+@Styles.Render("~/Content/kedno")
+@Scripts.Render("~/bundles/ajax")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/kendo")
+
+<div id="divBooksFilterPartial">
+    @{ Html.RenderPartial("BooksFilterPartial", Model); }
+</div>
+
+<div id="divBooksGridPartial">
+    @{ Html.RenderAction("BooksGridPartial", Model); }
+</div>
+
+<div id="divUsersGridPartial">
+    @{ Html.RenderAction("UsersGridPartial", Model); }
+</div>
+
+<script type="text/javascript">
+
+    function setBooksGridPartialFilter() {
+        var mainFilter = [];
+
+        var genresFilter = { logic: "or", filters: [] };
+        var bookGenres = document.getElementById('BookGenre').value.split(', ');
+        for (var i = 0; i < bookGenres.length; i++) {
+            genresFilter.filters.push({ field: 'BookGenre', operator: 'eq', value: bookGenres[i] });
+        }
+
+        mainFilter.push(genresFilter);
+        mainFilter.push({ field: 'Title', operator: 'contains', value: document.getElementById('Title').value });
+        //mainFilter.push({ field: 'FromDate', operator: 'contains', value: document.getElementById('Title').value });
+        //mainFilter.push({ field: 'ToDate', operator: 'contains', value: document.getElementById('Title').value });
+
+        var gridDataSource = $('#booksGrid').data('kendoGrid').dataSource.filter(mainFilter);
+    }
+
+    function resetBooksGridPartialFilter() {
+        var gridDataSource = $('#booksGrid').data('kendoGrid').dataSource.filter({});
+    }
+
+</script>

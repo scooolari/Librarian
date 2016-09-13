@@ -34,8 +34,10 @@ namespace Librarian.Controllers
             ModelState.Clear();
             BorrowService borrowService = new BorrowService();
             BorrowAddModel borrowAddModel = new BorrowAddModel();
+
             borrowAddModel.UsersList = borrowService.GetUsersList();
             borrowAddModel.BooksList = borrowService.GetAvailableBooksList();
+
             return PartialView("AddBorrow", borrowAddModel);
         }
 
@@ -44,7 +46,6 @@ namespace Librarian.Controllers
         {
             BorrowService borrowService = new BorrowService();
             borrowService.AddBorrows(borrowAddModel.SelectedUserId, borrowAddModel.ChosenBooks);
-            //var redirectUrl = new UrlHelper(Request.RequestContext).Action("Index", "Borrows");
             return Json(new { IsValid = true });
         }
 

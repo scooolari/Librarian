@@ -1,0 +1,36 @@
+﻿@model Models.Reports.ReportViewModel
+
+@*@using (Ajax.BeginForm(actionName: "FilterBooksGridPartial", controllerName: "Reports", routeValues: null,
+    ajaxOptions: new AjaxOptions { UpdateTargetId = "divBooksGridPartial" }, htmlAttributes: new { id = "formFilterBooksGridPartial" }))
+{
+    @Html.AntiForgeryToken()
+}*@
+
+<label>Genre</label>
+@(Html.Kendo().AutoComplete()
+                    .Name("BookGenre")
+                    .DataTextField("Value")
+                    .BindTo(Model.DictBookGenreList)
+                    .Filter(FilterType.StartsWith)
+                    .Separator(", ")
+)
+
+<label>Title</label>
+@Html.EditorFor(model => model.Title)
+
+<label>Date from</label>
+@(Html.Kendo().DatePicker()
+                    .Name("FromDate")
+                    .Value(Model.FromDate)
+                    .HtmlAttributes(new { style = "width: 150px" })
+)
+
+<label>Date to</label>
+@(Html.Kendo().DatePicker()
+                    .Name("ToDate")
+                    .Value(Model.ToDate)
+                    .HtmlAttributes(new { style = "width: 150px" })
+)
+
+<button onclick="setBooksGridPartialFilter();">Filter</button>
+<button onclick="resetBooksGridPartialFilter();">Reset</button>

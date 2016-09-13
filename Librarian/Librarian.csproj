@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -139,6 +140,7 @@
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\BorrowsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -211,6 +213,10 @@
     <Content Include="Views\Borrows\Index.cshtml" />
     <Content Include="Views\Borrows\AddBorrow.cshtml" />
     <Content Include="Views\Borrows\UserBooks.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\BooksFilterPartial.cshtml" />
+    <Content Include="Views\Reports\BooksGridPartial.cshtml" />
+    <Content Include="Views\Reports\UsersGridPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

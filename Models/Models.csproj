@@ -48,6 +48,11 @@
     <Compile Include="Borrows\UserBookViewModel.cs" />
     <Compile Include="Borrows\UserWithBooksViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\BooksViewModel.cs" />
+    <Compile Include="Reports\BookViewModel.cs" />
+    <Compile Include="Reports\ReportViewModel.cs" />
+    <Compile Include="Reports\UsersViewModel.cs" />
+    <Compile Include="Reports\UserViewModel.cs" />
     <Compile Include="Users\UsersViewModel.cs" />
     <Compile Include="Users\UserViewModel.cs" />
   </ItemGroup>

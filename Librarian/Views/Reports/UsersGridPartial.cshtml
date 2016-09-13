@@ -1,0 +1,24 @@
+﻿@model Models.Reports.ReportViewModel
+
+@(Html.Kendo().Grid<Models.Reports.UserViewModel>()
+        .Name("usersGrid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.UserName);
+            columns.Bound(c => c.BooksBorrowed);
+        })
+        .ToolBar(toolbar => toolbar.Template("<button onclick='ViewUserBooks()'>View books borrowed by user</button> "))
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .BindTo(Model.UsersList)
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Model(model => model.Id(a => a.UserId))
+            .PageSize(2))
+        .Selectable(a => a.Type(GridSelectionType.Row))
+)

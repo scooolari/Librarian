@@ -1,0 +1,27 @@
+﻿@model Models.Reports.ReportViewModel
+
+@(Html.Kendo().Grid<Models.Reports.BookViewModel>()
+        .Name("booksGrid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.Author);
+            columns.Bound(c => c.Title);
+            columns.Bound(c => c.BookGenre);
+            columns.Bound(c => c.Count);
+            columns.Bound(c => c.FromDate);
+            columns.Bound(c => c.ToDate);
+        })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .BindTo(Model.BooksList)
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("GetBooksList", "Reports"))
+            .Model(model => model.Id(a => a.BookId))
+            .PageSize(2))
+        )

@@ -32,6 +32,7 @@ namespace BLL.BorrowService
             Context.GetContext();
             List<KeyValuePair<int, string>> availableBooksList = Context.LibrarianEntity.Book
                 .Where(a => (a.Count - a.Borrow.Count(b => !b.IsReturned)) > 0)
+                .OrderBy(a => a.Title)
                 .ToDictionary(a => a.BookId, a => a.Title).ToList();
             return availableBooksList;
         }

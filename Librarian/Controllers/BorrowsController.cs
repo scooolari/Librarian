@@ -44,8 +44,8 @@ namespace Librarian.Controllers
         {
             BorrowService borrowService = new BorrowService();
             borrowService.AddBorrows(borrowAddModel.SelectedUserId, borrowAddModel.ChosenBooks);
-            var redirectUrl = new UrlHelper(Request.RequestContext).Action("Index", "Borrows");
-            return Json(new { Url = redirectUrl });
+            //var redirectUrl = new UrlHelper(Request.RequestContext).Action("Index", "Borrows");
+            return Json(new { IsValid = true });
         }
 
         [HttpGet]

@@ -59,7 +59,7 @@ namespace BLL.BookService
                 ReleaseDate = bookViewModel.ReleaseDate,
                 ISBN = bookViewModel.ISBN,
                 BookGenreId = bookViewModel.BookGenreId,
-                Count = bookViewModel.Count,
+                Count = (bookViewModel.Count < 1 ? 1 : bookViewModel.Count),
                 AddDate = DateTime.Now
             };
             Context.LibrarianEntity.Book.Add(newBook);
@@ -81,7 +81,7 @@ namespace BLL.BookService
                     editedBook.ReleaseDate = bookViewModel.ReleaseDate;
                     editedBook.ISBN = bookViewModel.ISBN;
                     editedBook.BookGenreId = bookViewModel.BookGenreId;
-                    editedBook.Count = bookViewModel.Count;
+                    editedBook.Count = (bookViewModel.Count < 0 ? 0 : bookViewModel.Count);
                     editedBook.ModifiedDate = DateTime.Now;
 
                     Context.LibrarianEntity.SaveChanges();

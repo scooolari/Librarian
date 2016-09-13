@@ -95,6 +95,12 @@
     function addBooksList(divname) {
         var previusId = "BooksList" + (actualListNumber);
         var previusBooksList = document.getElementById(previusId);
+        if (previusBooksList == null) {
+            actualListNumber = 1;
+            previousListNumber = 0;
+            previusId = "BooksList" + (actualListNumber);
+            previusBooksList = document.getElementById(previusId);
+        }
         var booksListOptions = previusBooksList.options;
 
         if (booksListOptions.length > 1) {
@@ -114,7 +120,17 @@
             document.getElementById(divname).appendChild(newDiv);
             var addedSelect = document.getElementById(actualId);
             removeOptionFromListsBefore(addedSelect.options[addedSelect.selectedIndex]);
+            sortOptions(actualId);
         }
+    }
+
+    function sortOptions(selectToSortId) {
+        var sel = $('#' + selectToSortId);
+        var selected = sel.val();
+        var opts_list = sel.find('option');
+        opts_list.sort(function (a, b) { return $(a).text() > $(b).text() ? 1 : -1; });
+        sel.html('').append(opts_list);
+        sel.val(selected);
     }
 
     function addOptionToAllLists(addedOption, skippedListNumber) {
@@ -122,12 +138,14 @@
         for (var i = 1; i <= actualListNumber; i++) {
             if (i == skippedListNumber)
                 continue;
-            var selectListItems = document.getElementById('BooksList' + i);
+            var actualId = 'BooksList' + i;
+            var selectListItems = document.getElementById(actualId);
             if (selectListItems) {
                 var option = document.createElement("option");
                 option.text = addedOption.text;
                 option.value = addedOption.value;
                 selectListItems.options.add(option);
+                sortOptions(actualId);
             }
         }
     }
@@ -172,12 +190,22 @@
             var previusId = "BooksList" + (previousListNumber);
             var previusBooksList = document.getElementById(previusId);
             actualListNumber = previousListNumber;
-            previousListNumber = lookForPreviousId(actualListNumber);
+            previousListNumber = lookForActualId(actualListNumber);
         }
         else if (removedListNumber == previousListNumber) {
             previousListNumber = lookForPreviousId(previousListNumber);
         }
         myDiv.parentNode.removeChild(myDiv);
+    }
+
+    function lookForActualId(startingListNumber) {
+        for (var i = startingListNumber - 1; i >= 0; i++) {
+            var existsBooksList = document.getElementById('BooksList' + i);
+            if (existsBooksList) {
+                return i;
+            }
+        }
+        return 1;
     }
 
     function lookForPreviousId(startingListNumber) {
@@ -187,7 +215,7 @@
                 return i;
             }
         }
-        return 1;
+        return 0;
     }
 
     function SaveAndSubmit() {
@@ -206,10 +234,20 @@
                 datatype: "json",
             traditional: true,
             data: { 'ChosenBooks': booksIdList, 'SelectedUserId': userId },
-            success: function (result) {
-                window.location.href = result.Url;
+            success: function (e) {
+                if (e.IsValid) {
+                    $('#borrowsGrid').data('kendoGrid').dataSource.read();
+                    $('#borrowsGrid').data('kendoGrid').refresh();
+                    $('#usersWithBooksGrid').data('kendoGrid').dataSource.read();
+                    $('#usersWithBooksGrid').data('kendoGrid').refresh();
+                    $("#AddBorrowWindow").data("kendoWindow").close();
+                }
             }
         });
+    }
+
+    function Close() {
+        $("#AddBorrowWindow").data("kendoWindow").close();
     }
 
     function ViewUserBooks() {

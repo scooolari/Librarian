@@ -10,19 +10,19 @@
         @Html.ValidationSummary(true)
     
             <div class="col-md-10">
-                @Html.LabelFor(model => model.Author, new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.Author)
                 @Html.EditorFor(model => model.Author)
                 @Html.ValidationMessageFor(model => model.Author)
             </div>
     
             <div class="col-md-10">
-                @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.Title)
                 @Html.EditorFor(model => model.Title)
                 @Html.ValidationMessageFor(model => model.Title)
             </div>
     
             <div class="col-md-10">
-                @Html.LabelFor(model => model.ReleaseDate, new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.ReleaseDate)
                 @(Html.Kendo().DatePicker()
                     .Name("ReleaseDate")
                     .Value(Model.ReleaseDate)
@@ -32,13 +32,13 @@
             </div>
     
             <div class="col-md-10">
-                @Html.LabelFor(model => model.ISBN, new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.ISBN)
                 @Html.EditorFor(model => model.ISBN)
                 @Html.ValidationMessageFor(model => model.ISBN)
             </div>
     
             <div class="col-md-10">
-                @Html.LabelFor(model => model.BookGenreId, new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.BookGenreId)
                 @(Html.Kendo().DropDownList()
                     .Name("BookGenreId")
                     .DataTextField("Name")
@@ -50,7 +50,7 @@
             </div>
     
             <div class="col-md-10">
-                @Html.LabelFor(model => model.Count, new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.Count)
                 @Html.EditorFor(model => model.Count)
                 @Html.ValidationMessageFor(model => model.Count)
             </div>

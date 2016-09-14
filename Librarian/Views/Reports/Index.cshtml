@@ -31,7 +31,7 @@
 
     function setBooksGridPartialFilter() {
         var mainFilter = { logic: "and", filters: [] }
-        
+
         var genresFilter = { logic: "or", filters: [] };
         var bookGenres = document.getElementById('BookGenre').value.split(', ');
         for (var i = 0; i < bookGenres.length; i++) {
@@ -42,7 +42,7 @@
         if (genresFilter.filters.length > 0) {
             mainFilter.filters.push(genresFilter);
         }
-            
+
         if (document.getElementById('Title').value.length > 0 && document.getElementById('Title').value.trim()) {
             mainFilter.filters.push({ field: 'Title', operator: 'contains', value: document.getElementById('Title').value });
         }
@@ -57,11 +57,8 @@
 
         document.getElementById('BookGenre').value = '';
         document.getElementById('Title').value = '';
-
-        var myDate = new Date();
-        document.getElementById('ToDate').value = myDate.toLocaleFormat('%d.%m.%Y');
-        myDate.setYear(myDate.getFullYear() - 1);
-        document.getElementById('FromDate').value = myDate.toLocaleFormat('%d.%m.%Y');
+        document.getElementById('ToDate').value = null;
+        document.getElementById('FromDate').value = null;
 
         pushDates(mainFilter);
 
@@ -69,10 +66,16 @@
     }
 
     function pushDates(myfilter) {
-        var fromDateArray = document.getElementById('FromDate').value.split(".");
-        var toDateArray = document.getElementById('ToDate').value.split(".");
-        myfilter.filters.push({ field: 'FromDate', operator: 'gte', value: new Date(fromDateArray[2], (fromDateArray[1] - 1), fromDateArray[0]) });
-        myfilter.filters.push({ field: 'ToDate', operator: 'lte', value: new Date(toDateArray[2], (toDateArray[1] - 1), toDateArray[0]) });
+
+        if (document.getElementById('FromDate').value) {
+            var fromDateArray = document.getElementById('FromDate').value.split(".");
+            myfilter.filters.push({ field: 'FromDate', operator: 'gte', value: new Date(fromDateArray[2], (fromDateArray[1] - 1), fromDateArray[0]) });
+        }
+
+        if (document.getElementById('ToDate').value) {
+            var toDateArray = document.getElementById('ToDate').value.split(".");
+            myfilter.filters.push({ field: 'ToDate', operator: 'lte', value: new Date(toDateArray[2], (toDateArray[1] - 1), toDateArray[0]) });
+        }
     }
 
 </script>

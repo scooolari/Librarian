@@ -21,9 +21,7 @@ namespace Librarian.Controllers
             reportViewModel.BookGenre = string.Empty;
             reportViewModel.DictBookGenreList = reportService.GetDictBookGenreList();
             reportViewModel.Title = string.Empty;
-            reportViewModel.FromDate = DateTime.Now.AddYears(-1);
-            reportViewModel.ToDate = DateTime.Now;
-            reportViewModel.BooksList = reportService.GetBooksBorrowsList(reportViewModel.BookGenre, reportViewModel.Title, reportViewModel.FromDate, reportViewModel.ToDate);
+            reportViewModel.BooksList = reportService.GetBooksBorrowsList(reportViewModel.BookGenre, reportViewModel.Title);
             reportViewModel.UsersList = reportService.GetUsersList();
 
             return View(reportViewModel);

@@ -10,16 +10,14 @@ namespace BLL.ReportService
 {
     public class ReportService
     {
-        public List<BorrowViewModel> GetBooksBorrowsList(string bookGenre, string title, DateTime fromDate, DateTime toDate)
+        public List<BorrowViewModel> GetBooksBorrowsList(string bookGenre, string title)
         {
             bookGenre = bookGenre.Trim();
             string[] bookGenres = bookGenre.Split(',');
 
             List<BorrowViewModel> borrowsViewModelList = Context.GetContext().Borrow
                 .Where(a => (bookGenre == "" ? true : (bookGenres.Contains(a.Book.DictBookGenre.Name))) 
-                    && (title == "" ? true : a.Book.Title.Contains(title))
-                    && (a.FromDate >= fromDate)
-                    && (a.ToDate <= toDate))
+                    && (title == "" ? true : a.Book.Title.Contains(title)))
                 .Select(item => new BorrowViewModel
                 {
                     BorrowId = item.BorrowId,

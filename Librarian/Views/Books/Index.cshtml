@@ -48,6 +48,8 @@
               .Modal(false)
               .Actions(a => { })
               .Draggable()
+              .Width(350)
+              .Height(400)
 )
 
 @(Html.Kendo().Window()
@@ -57,6 +59,8 @@
               .Modal(false)
               .Actions(a => { })
               .Draggable()
+              .Width(350)
+              .Height(400)
 )
 
 <script type="text/javascript">
@@ -71,7 +75,6 @@
     }
 
     function EditBookWindow(e) {
-        e.preventDefault();
         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
         var aBookId = dataItem.BookId;
         var win = $("#EditBookWindow");
@@ -91,6 +94,14 @@
             else if (e.Mode == 'Edit')
                 $("#EditBookWindow").data("kendoWindow").close();
         }
+    }
+
+    function CloseAddWindow() {
+        $("#AddBookWindow").data("kendoWindow").close();
+    }
+
+    function CloseEditWindow() {
+        $("#EditBookWindow").data("kendoWindow").close();
     }
 
 </script>

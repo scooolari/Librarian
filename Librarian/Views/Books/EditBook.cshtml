@@ -5,49 +5,40 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.BookId)
         
-    <div class="form-horizontal">
+    <div>
         <hr />
         @Html.ValidationSummary(true)
     
-        <div class="form-group">
-            @Html.LabelFor(model => model.Author, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
+                @Html.LabelFor(model => model.Author, new { @class = "control-label col-md-2" })
                 @Html.EditorFor(model => model.Author)
                 @Html.ValidationMessageFor(model => model.Author)
             </div>
-        </div>
     
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
+                @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
                 @Html.EditorFor(model => model.Title)
                 @Html.ValidationMessageFor(model => model.Title)
             </div>
-        </div>
     
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReleaseDate, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
+                @Html.LabelFor(model => model.ReleaseDate, new { @class = "control-label col-md-2" })
                 @(Html.Kendo().DatePicker()
                     .Name("ReleaseDate")
                     .Value(Model.ReleaseDate)
-                    .HtmlAttributes(new { style = "width: 100%" })
+                    .HtmlAttributes(new { style = "width: 150px" })
                 )
                 @Html.ValidationMessageFor(model => model.ReleaseDate)
             </div>
-        </div>
     
-        <div class="form-group">
-            @Html.LabelFor(model => model.ISBN, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
+                @Html.LabelFor(model => model.ISBN, new { @class = "control-label col-md-2" })
                 @Html.EditorFor(model => model.ISBN)
                 @Html.ValidationMessageFor(model => model.ISBN)
             </div>
-        </div>
     
-        <div class="form-group">
-            @Html.LabelFor(model => model.BookGenreId, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
+                @Html.LabelFor(model => model.BookGenreId, new { @class = "control-label col-md-2" })
                 @(Html.Kendo().DropDownList()
                     .Name("BookGenreId")
                     .DataTextField("Name")
@@ -57,22 +48,17 @@
                 )
                 @Html.ValidationMessageFor(model => model.BookGenreId)
             </div>
-        </div>
     
-        <div class="form-group">
-            @Html.LabelFor(model => model.Count, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
+                @Html.LabelFor(model => model.Count, new { @class = "control-label col-md-2" })
                 @Html.EditorFor(model => model.Count)
                 @Html.ValidationMessageFor(model => model.Count)
             </div>
-        </div>
     
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div>
                 <input id="submit" type="submit" value="Save" class="btn btn-default" />
-            </div>
-            <div class="col-md-offset-2 col-md-10">
-                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-default" })
+                <button type="button" onclick="CloseEditWindow()" class="btn btn-default">Cancel</button>
             </div>
         </div>
     </div>

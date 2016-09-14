@@ -21,6 +21,7 @@ namespace Models.Books
         [Required]
         public string ISBN { get; set; }
         [Required]
+        [Display(Name = "Book genre")]
         public int BookGenreId { get; set; }
         public string BookGenre { get; set; }
         [Required]

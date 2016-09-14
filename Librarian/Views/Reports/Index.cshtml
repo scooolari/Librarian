@@ -5,13 +5,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Reports</h2>
-
 @Styles.Render("~/Content/kedno")
 @Scripts.Render("~/bundles/ajax")
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/jqueryval")
 @Scripts.Render("~/bundles/kendo")
+
+<h2>Borrows report</h2>
 
 <div id="divBooksFilterPartial">
     @{ Html.RenderPartial("BooksFilterPartial", Model); }
@@ -21,6 +21,8 @@
     @{ Html.RenderAction("BooksGridPartial", Model); }
 </div>
 
+<h2>Most active users reports</h2>
+
 <div id="divUsersGridPartial">
     @{ Html.RenderAction("UsersGridPartial", Model); }
 </div>
@@ -28,24 +30,49 @@
 <script type="text/javascript">
 
     function setBooksGridPartialFilter() {
-        var mainFilter = [];
-
+        var mainFilter = { logic: "and", filters: [] }
+        
         var genresFilter = { logic: "or", filters: [] };
         var bookGenres = document.getElementById('BookGenre').value.split(', ');
         for (var i = 0; i < bookGenres.length; i++) {
-            genresFilter.filters.push({ field: 'BookGenre', operator: 'eq', value: bookGenres[i] });
+            if (bookGenres[i].length > 0 && bookGenres[i].trim()) {
+                genresFilter.filters.push({ field: 'BookGenre', operator: 'eq', value: bookGenres[i] });
+            }
+        }
+        if (genresFilter.filters.length > 0) {
+            mainFilter.filters.push(genresFilter);
+        }
+            
+        if (document.getElementById('Title').value.length > 0 && document.getElementById('Title').value.trim()) {
+            mainFilter.filters.push({ field: 'Title', operator: 'contains', value: document.getElementById('Title').value });
         }
 
-        mainFilter.push(genresFilter);
-        mainFilter.push({ field: 'Title', operator: 'contains', value: document.getElementById('Title').value });
-        //mainFilter.push({ field: 'FromDate', operator: 'contains', value: document.getElementById('Title').value });
-        //mainFilter.push({ field: 'ToDate', operator: 'contains', value: document.getElementById('Title').value });
+        pushDates(mainFilter);
 
         var gridDataSource = $('#booksGrid').data('kendoGrid').dataSource.filter(mainFilter);
     }
 
     function resetBooksGridPartialFilter() {
-        var gridDataSource = $('#booksGrid').data('kendoGrid').dataSource.filter({});
+        var mainFilter = { logic: "and", filters: [] }
+
+        document.getElementById('BookGenre').value = '';
+        document.getElementById('Title').value = '';
+
+        var myDate = new Date();
+        document.getElementById('ToDate').value = myDate.toLocaleFormat('%d.%m.%Y');
+        myDate.setYear(myDate.getFullYear() - 1);
+        document.getElementById('FromDate').value = myDate.toLocaleFormat('%d.%m.%Y');
+
+        pushDates(mainFilter);
+
+        var gridDataSource = $('#booksGrid').data('kendoGrid').dataSource.filter(mainFilter);
+    }
+
+    function pushDates(myfilter) {
+        var fromDateArray = document.getElementById('FromDate').value.split(".");
+        var toDateArray = document.getElementById('ToDate').value.split(".");
+        myfilter.filters.push({ field: 'FromDate', operator: 'gte', value: new Date(fromDateArray[2], (fromDateArray[1] - 1), fromDateArray[0]) });
+        myfilter.filters.push({ field: 'ToDate', operator: 'lte', value: new Date(toDateArray[2], (toDateArray[1] - 1), toDateArray[0]) });
     }
 
 </script>

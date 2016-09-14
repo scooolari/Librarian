@@ -10,17 +10,19 @@ namespace BLL.ReportService
 {
     public class ReportService
     {
-        public List<BookViewModel> GetBooksBorrowsList(string bookGenre, string title, DateTime fromDate, DateTime toDate)
+        public List<BorrowViewModel> GetBooksBorrowsList(string bookGenre, string title, DateTime fromDate, DateTime toDate)
         {
             bookGenre = bookGenre.Trim();
             string[] bookGenres = bookGenre.Split(',');
 
-            List<BookViewModel> bookViewModelList = Context.GetContext().Borrow
+            List<BorrowViewModel> borrowsViewModelList = Context.GetContext().Borrow
                 .Where(a => (bookGenre == "" ? true : (bookGenres.Contains(a.Book.DictBookGenre.Name))) 
                     && (title == "" ? true : a.Book.Title.Contains(title))
-                    && (a.FromDate >= fromDate || a.ToDate <= toDate))
-                .Select(item => new BookViewModel
+                    && (a.FromDate >= fromDate)
+                    && (a.ToDate <= toDate))
+                .Select(item => new BorrowViewModel
                 {
+                    BorrowId = item.BorrowId,
                     BookId = item.BookId,
                     Author = item.Book.Author,
                     Title = item.Book.Title,
@@ -30,14 +32,15 @@ namespace BLL.ReportService
                     ToDate = item.ToDate
                 }).ToList();
 
-            return bookViewModelList;
+            return borrowsViewModelList;
         }
 
-        public List<BookViewModel> GetBooksBorrowsList()
+        public List<BorrowViewModel> GetBooksBorrowsList()
         {
-            List<BookViewModel> bookViewModelList = Context.GetContext().Borrow
-                .Select(item => new BookViewModel
+            List<BorrowViewModel> bookViewModelList = Context.GetContext().Borrow
+                .Select(item => new BorrowViewModel
                 {
+                    BorrowId = item.BorrowId,
                     BookId = item.BookId,
                     Author = item.Book.Author,
                     Title = item.Book.Title,
@@ -66,7 +69,7 @@ namespace BLL.ReportService
                 UserId = item.UserId,
                 UserName = string.Concat(item.FirstName, " ", item.LastName),
                 BooksBorrowed = item.Borrow.Count(a => !a.IsReturned)
-            }).ToList();
+            }).OrderByDescending(a => a.BooksBorrowed).ToList();
 
             return usersList;
         }

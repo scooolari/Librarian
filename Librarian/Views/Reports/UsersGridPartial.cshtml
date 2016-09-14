@@ -7,18 +7,35 @@
             columns.Bound(c => c.UserName);
             columns.Bound(c => c.BooksBorrowed);
         })
-        .ToolBar(toolbar => toolbar.Template("<button onclick='ViewUserBooks()'>View books borrowed by user</button> "))
         .Scrollable()
-        .Groupable()
         .Sortable()
         .Pageable(pageable => pageable
             .Refresh(true)
             .PageSizes(true)
             .ButtonCount(5))
+        .Filterable(filterable => filterable
+            .Extra(false)
+            .Operators(operators => operators
+                .ForNumber(number => number.Clear()
+                    .IsEqualTo("Equal to")
+                    .IsGreaterThan("Greater than")
+                    .IsGreaterThanOrEqualTo("Greater than or equal to")
+                    .IsLessThan("Less than")
+                    .IsLessThanOrEqualTo("Less than or equal to"))
+                .ForString(str => str.Clear()
+                    .StartsWith("Starts with")
+                    .IsEqualTo("Is equal to")
+                    .IsNotEqualTo("Is not equal to")
+                    .Contains("Contains"))
+            )
+            .Mode(GridFilterMode.Row)
+        )
         .BindTo(Model.UsersList)
+        //.AutoBind(false)
         .DataSource(dataSource => dataSource
             .Ajax()
+            .Read(read => read.Action("GetMostActiveUsersList", "Reports"))
             .Model(model => model.Id(a => a.UserId))
-            .PageSize(2))
+            .PageSize(20))
         .Selectable(a => a.Type(GridSelectionType.Row))
 )

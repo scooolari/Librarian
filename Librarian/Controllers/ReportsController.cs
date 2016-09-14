@@ -39,11 +39,18 @@ namespace Librarian.Controllers
             return PartialView(reportViewModel);
         }
 
-        public ActionResult GetBooksList([DataSourceRequest]DataSourceRequest request)
+        public ActionResult GetBorrowsList([DataSourceRequest]DataSourceRequest request)
         {
             ReportService reportService = new ReportService();
             DataSourceResult booksListDataSourceResults = reportService.GetBooksBorrowsList().ToDataSourceResult(request);
-            return Json(booksListDataSourceResults);
+            return Json(booksListDataSourceResults, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetMostActiveUsersList([DataSourceRequest]DataSourceRequest request)
+        {
+            ReportService reportService = new ReportService();
+            DataSourceResult usersListDataSourceResults = reportService.GetUsersList().ToDataSourceResult(request);
+            return Json(usersListDataSourceResults, JsonRequestBehavior.AllowGet);
         }
     }
 }

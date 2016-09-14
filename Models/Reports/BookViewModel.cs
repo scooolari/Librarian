@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Models.Reports
 {
-    public class BookViewModel
+    public class BorrowViewModel
     {
+        public int BorrowId { get; set; }
         public int BookId { get; set; }
         public string Author { get; set; }
         public string Title { get; set; }

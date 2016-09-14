@@ -1,27 +1,26 @@
 ﻿@model Models.Reports.ReportViewModel
 
-@(Html.Kendo().Grid<Models.Reports.BookViewModel>()
+@(Html.Kendo().Grid<Models.Reports.BorrowViewModel>()
         .Name("booksGrid")
         .Columns(columns =>
         {
             columns.Bound(c => c.Author);
             columns.Bound(c => c.Title);
             columns.Bound(c => c.BookGenre);
-            columns.Bound(c => c.Count);
-            columns.Bound(c => c.FromDate);
-            columns.Bound(c => c.ToDate);
+            columns.Bound(c => c.FromDate).Format("{0: dd.MM.yyyy}");
+            columns.Bound(c => c.ToDate).Format("{0: dd.MM.yyyy}");
         })
         .Scrollable()
-        .Groupable()
         .Sortable()
         .Pageable(pageable => pageable
             .Refresh(true)
             .PageSizes(true)
             .ButtonCount(5))
-        .BindTo(Model.BooksList)
+        //.BindTo(Model.BooksList)
+        .AutoBind(false)
         .DataSource(dataSource => dataSource
             .Ajax()
-            .Read(read => read.Action("GetBooksList", "Reports"))
-            .Model(model => model.Id(a => a.BookId))
-            .PageSize(2))
+            .Read(read => read.Action("GetBorrowsList", "Reports"))
+            .Model(model => model.Id(a => a.BorrowId))
+            .PageSize(20))
         )

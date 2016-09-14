@@ -13,11 +13,10 @@
         .Scrollable()
         .Sortable()
         .Pageable(pageable => pageable
-            .Refresh(true)
+            .Refresh(false)
             .PageSizes(true)
             .ButtonCount(5))
-        //.BindTo(Model.BooksList)
-        .AutoBind(false)
+        .BindTo(Model.BooksList)
         .DataSource(dataSource => dataSource
             .Ajax()
             .Read(read => read.Action("GetBorrowsList", "Reports"))

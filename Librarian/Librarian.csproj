@@ -220,6 +220,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Black\" />
+    <Folder Include="Content\BlueOpal\" />
+    <Folder Include="Content\Default\" />
+    <Folder Include="Content\font\" />
+    <Folder Include="Content\Metro\" />
+    <Folder Include="Content\Silver\" />
+    <Folder Include="Content\textures\" />
+    <Folder Include="Content\themes\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

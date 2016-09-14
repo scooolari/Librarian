@@ -4,38 +4,24 @@
         .Name("usersGrid")
         .Columns(columns =>
         {
-            columns.Bound(c => c.UserName);
-            columns.Bound(c => c.BooksBorrowed);
+            columns.Bound(c => c.UserName).Filterable(f => f.Cell(c => c.ShowOperators(false).Operator("contains")));
+            columns.Bound(c => c.BooksBorrowed).Filterable(false);
         })
         .Scrollable()
         .Sortable()
         .Pageable(pageable => pageable
-            .Refresh(true)
+            .Refresh(false)
             .PageSizes(true)
             .ButtonCount(5))
         .Filterable(filterable => filterable
             .Extra(false)
-            .Operators(operators => operators
-                .ForNumber(number => number.Clear()
-                    .IsEqualTo("Equal to")
-                    .IsGreaterThan("Greater than")
-                    .IsGreaterThanOrEqualTo("Greater than or equal to")
-                    .IsLessThan("Less than")
-                    .IsLessThanOrEqualTo("Less than or equal to"))
-                .ForString(str => str.Clear()
-                    .StartsWith("Starts with")
-                    .IsEqualTo("Is equal to")
-                    .IsNotEqualTo("Is not equal to")
-                    .Contains("Contains"))
-            )
             .Mode(GridFilterMode.Row)
+            .Operators(o => o.ForString(a => a.Contains("Contains")))
         )
         .BindTo(Model.UsersList)
-        //.AutoBind(false)
         .DataSource(dataSource => dataSource
             .Ajax()
             .Read(read => read.Action("GetMostActiveUsersList", "Reports"))
             .Model(model => model.Id(a => a.UserId))
             .PageSize(20))
-        .Selectable(a => a.Type(GridSelectionType.Row))
 )

@@ -66,7 +66,6 @@
     }
 
     function pushDates(myfilter) {
-
         if (document.getElementById('FromDate').value) {
             var fromDateArray = document.getElementById('FromDate').value.split(".");
             myfilter.filters.push({ field: 'FromDate', operator: 'gte', value: new Date(fromDateArray[2], (fromDateArray[1] - 1), fromDateArray[0]) });
@@ -75,6 +74,27 @@
         if (document.getElementById('ToDate').value) {
             var toDateArray = document.getElementById('ToDate').value.split(".");
             myfilter.filters.push({ field: 'ToDate', operator: 'lte', value: new Date(toDateArray[2], (toDateArray[1] - 1), toDateArray[0]) });
+        }
+    }
+
+    function submitFormFilterBooksGridPartial() {
+        $('#booksGrid').data('kendoGrid').dataSource.read();
+    }
+
+    function resetFormFilterBooksGridPartial() {
+        $("#BookGenreId").val("").data("kendoComboBox").text("")
+        $("#Title").val('');
+        $("#FromDate").val('');
+        $("#ToDate").val('');
+        submitFormFilterBooksGridPartial();
+    }
+
+    function getBorrowsFilter() {
+        return {
+            bookGenreId: $("#BookGenreId").val(),
+            title: $("#Title").val(),
+            fromDate: $("#FromDate").val(),
+            toDate: $("#ToDate").val(),
         }
     }
 

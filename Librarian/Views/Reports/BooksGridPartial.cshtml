@@ -19,7 +19,7 @@
         .BindTo(Model.BooksList)
         .DataSource(dataSource => dataSource
             .Ajax()
-            .Read(read => read.Action("GetBorrowsList", "Reports"))
+            .Read(read => read.Action("GetBorrowsList", "Reports").Data("getBorrowsFilter"))
             .Model(model => model.Id(a => a.BorrowId))
             .PageSize(20))
         )
